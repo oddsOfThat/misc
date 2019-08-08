@@ -1,0 +1,19 @@
+<head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="cool.js"></script>
+</head>
+
+<body>
+<div id="myDiv"> </div>
+<script>
+l=lab();
+d=cool();
+let data = {
+  x: l,
+  y: d,
+  mode: 'markers',
+  type: 'scatter'
+};
+Plotly.plot('myDiv', [data]);
+</script>
+</body>
