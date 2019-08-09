@@ -7,11 +7,13 @@ function make2dArray(c, r) {
 }
 
 class Cell {
-    constructor(x, y) {
+    constructor(i, j) {
         this.mine = false
         this.revealed = false;
-        this.x = x * w;
-        this.y = y * w;
+        this.i=i;
+        this.j=j;
+        this.x = i * w;
+        this.y = j * w;
         this.clue;
     }
 
@@ -33,86 +35,74 @@ class Cell {
             rect(this.x, this.y, w, w);
         }
     }
-
+    reveal(){
+        if(!this.revealed&&this.clue==0&&!this.mine){
+            this.revealed = true;
+            this.flood();
+        }
+        else this.revealed = true;
+    }
     clicked(x, y) {
         if (x > this.x && x < this.x + w && y > this.y && y < this.y + w) {
-            this.revealed = true;
-            if(this.clue==0)this.flood();
+            this.reveal();
         }
     }
     flood(){
-        let i = this.x / w;
-        let j = this.y / w;
-
-
-        if (j < grid.length - 1){
-        if(!grid[i][j+1].revealed){
-            grid[i][j+1].revealed=true;
-            if(grid[i][j+1].clue==0)grid[i][j+1].flood();
-        }}
-        if (j > 0){
-        if(!grid[i][j-1].revealed){
-            grid[i][j-1].revealed=true;
-            if(grid[i][j-1].clue==0)grid[i][j-1].flood();
-        }}
-        if (i < grid.length - 1) {
-        if(!grid[i+1][j].revealed){
-            grid[i+1][j].revealed=true;
-            if(grid[i+1][j].clue==0)grid[i+1][j].flood();
-        }}
-        if (i > 0) {
-        if(!grid[i-1][j].revealed){
-            grid[i-1][j].revealed=true;
-            if(grid[i-1][j].clue==0)grid[i-1][j].flood();
-        }}
-        if (i < grid.length - 1) { if (j < grid.length - 1){
-        if(!grid[i+1][j+1].revealed){
-            grid[i+1][j+1].revealed=true;
-            if(grid[i+1][j+1].clue==0)grid[i+1][j+1].flood();
-        }}}
-
-        if (i < grid.length - 1) {if (j > 0){
-        if(!grid[i+1][j-1].revealed){
-            grid[i+1][j-1].revealed=true;
-            if(grid[i+1][j-1].clue==0)grid[i+1][j-1].flood();
-        }}}
-
-        if (i > 0) {if (j < grid.length - 1){
-        if(!grid[i-1][j+1].revealed){
-            grid[i-1][j+1].revealed=true;
-            if(grid[i-1][j+1].clue==0)grid[i-1][j+1].flood();
-        }}}
-
-        if (i > 0) {if (j > 0){
-        if(!grid[i-1][j-1].revealed){
-            grid[i-1][j-1].revealed=true;
-            if(grid[i-1][j-1].clue==0)grid[i-1][j-1].flood();
-        }}}                        
-    }
+       
+        if (this.j < grid[0].length-1 ){
+            grid[this.i][this.j+1].reveal();
+        }
+        if (this.j > 0){
+            grid[this.i][this.j-1].reveal();
+        }
+        if (this.i< grid.length-1 ){
+            grid[this.i+1][this.j].reveal();
+        } 
+        if (this.i > 0){       
+            grid[this.i-1][this.j].reveal();
+        }
+        if (this.j < grid[0].length-1 &&this.i< grid.length-1 ){
+            grid[this.i+1][this.j+1].reveal();
+        }
+        if (this.j > 0&&this.i< grid.length-1 ){
+            grid[this.i+1][this.j-1].reveal();
+        }
+        if (this.j < grid[0].length-1  && this.i > 0){
+            grid[this.i-1][this.j+1].reveal();
+        }
+        if (this.j > 0 && this.i > 0){
+            grid[this.i-1][this.j-1].reveal();
+        }
+            
+        }                        
     clue() {
-        let i = this.x / w;
-        let j = this.y / w;
+
         let bombs =null;
 
-        if (i > 0) {
-            if (j < grid.length - 1)
-                if (grid[i - 1][j + 1].mine) bombs += 1;
-            if (grid[i - 1][j].mine) bombs += 1;
-            if (j > 0)
-                if (grid[i - 1][j - 1].mine) bombs += 1;
+        if (this.j < grid[0].length-1 ){
+            if(grid[this.i][this.j+1].mine) bombs=bombs+1;
         }
-
-        if (i < grid.length - 1) {
-            if (j < grid.length - 1)
-                if (grid[i + 1][j + 1].mine) bombs += 1;
-            if (grid[i + 1][j].mine) bombs += 1;
-            if (j > 0)
-                if (grid[i + 1][j - 1].mine) bombs += 1;
+        if (this.j > 0){
+            if(grid[this.i][this.j-1].mine) bombs=bombs+1;
         }
-        if (j < grid.length - 1)
-            if (grid[i][j + 1].mine) bombs += 1;
-        if (j > 0)
-            if (grid[i][j - 1].mine) bombs += 1;
+        if (this.i< grid.length-1 ){
+            if(grid[this.i+1][this.j].mine) bombs=bombs+1;
+        } 
+        if (this.i > 0){       
+            if(grid[this.i-1][this.j].mine) bombs=bombs+1;
+        }
+        if (this.j < grid[0].length-1 &&this.i< grid.length-1 ){
+            if(grid[this.i+1][this.j+1].mine) bombs=bombs+1;
+        }
+        if (this.j > 0&&this.i< grid.length-1 ){
+            if(grid[this.i+1][this.j-1].mine) bombs=bombs+1;
+        }
+        if (this.j < grid[0].length-1  && this.i > 0){
+            if(grid[this.i-1][this.j+1].mine) bombs=bombs+1;
+        }
+        if (this.j > 0 && this.i > 0){
+            if(grid[this.i-1][this.j-1].mine) bombs=bombs+1;
+        }
         if(!bombs)bombs= " ";
         return bombs
     }
@@ -121,10 +111,10 @@ class Cell {
 
 
 let grid;
-const cols = 20;
-const rows = 20;
+const cols = 10;
+const rows = 10;
 const w = 30;
-const totalMines = 40;
+const totalMines = 14;
 
 function setup() {
     createCanvas(cols * w, rows * w);
@@ -155,8 +145,8 @@ function draw() {
     background(0);
     grid.forEach(col => col.forEach(cell => cell.show()));
 }
-
 function mousePressed() {
+
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
             grid[i][j].clicked(mouseX, mouseY);
