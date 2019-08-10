@@ -10,6 +10,7 @@ class Cell {
     constructor(i, j) {
         this.mine = false
         this.revealed = false;
+        this.marked=false;
         this.i=i;
         this.j=j;
         this.x = i * w;
@@ -31,8 +32,14 @@ class Cell {
                 text(this.clue, this.x + w / 2, this.y + w / 2)
             }
         } else {
+            if(!this.marked){
             fill(255);
             rect(this.x, this.y, w, w);
+            }
+            else{
+                fill(0,0,255);
+                rect(this.x, this.y, w, w);
+            }
         }
     }
     reveal(){
@@ -43,9 +50,21 @@ class Cell {
         else this.revealed = true;
     }
     clicked(x, y) {
+        
         if (x > this.x && x < this.x + w && y > this.y && y < this.y + w) {
+            if(!document.getElementById("marking").checked){
             this.reveal();
+            }
+            else{
+                this.mark();
+            }
+        
+        
         }
+    }
+    mark(){
+        if(!this.marked)this.marked=true;
+        else this.marked=false;
     }
     flood(){
        
